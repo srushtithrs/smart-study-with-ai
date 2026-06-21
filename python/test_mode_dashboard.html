@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Mode Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 p-4 md:p-8">
+
+    <div class="max-w-xl mx-auto bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+        
+        <!-- Header -->
+        <div class="bg-violet-600 p-5 flex items-center gap-3 text-white">
+            <i data-lucide="clipboard-list" class="w-6 h-6"></i>
+            <h1 class="text-xl font-semibold">4. Test Mode</h1>
+        </div>
+
+        <div class="p-6 space-y-6">
+            
+            <section>
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">Create Questions</h2>
+                <div class="space-y-4">
+                    <input type="text" placeholder="Question (e.g., What is the capital of France?)" class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" placeholder="Option A" class="w-full p-3 border border-gray-200 rounded-lg">
+                        <input type="text" placeholder="Option B" class="w-full p-3 border border-gray-200 rounded-lg">
+                        <input type="text" placeholder="Option C" class="w-full p-3 border border-gray-200 rounded-lg">
+                        <input type="text" placeholder="Option D" class="w-full p-3 border border-gray-200 rounded-lg">
+                    </div>
+
+                    <div class="flex gap-4">
+                        <select class="flex-grow p-3 border border-gray-200 rounded-lg bg-white text-gray-700">
+                            <option>Correct Answer: A</option>
+                            <option>Correct Answer: B</option>
+                            <option>Correct Answer: C</option>
+                            <option>Correct Answer: D</option>
+                        </select>
+                        <button class="bg-violet-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-violet-700 transition flex items-center gap-2">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Add Question
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <div class="flex items-center gap-4">
+                <div class="bg-violet-50 text-violet-700 px-6 py-3 rounded-lg font-medium">
+                    Questions added: 5
+                </div>
+                <button class="flex-grow bg-emerald-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-emerald-600 transition flex items-center justify-center gap-2">
+                    <i data-lucide="rocket" class="w-4 h-4"></i> Start Quiz Test
+                </button>
+            </div>
+
+            <div class="bg-orange-50 p-5 rounded-xl border border-orange-100">
+                <h3 class="text-orange-800 font-medium mb-3 text-sm">Sample Question Preview</h3>
+                <p class="font-semibold text-gray-900 mb-4">Q1: What is the capital of France?</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <button class="bg-green-100 border-2 border-green-500 text-green-800 p-2 rounded-lg text-sm font-medium">A) Paris</button>
+                    <button class="bg-white border border-gray-200 text-gray-700 p-2 rounded-lg text-sm">B) London</button>
+                    <button class="bg-white border border-gray-200 text-gray-700 p-2 rounded-lg text-sm">C) Rome</button>
+                    <button class="bg-white border border-gray-200 text-gray-700 p-2 rounded-lg text-sm">D) Berlin</button>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between p-6 bg-gray-50 rounded-xl border border-gray-100">
+                <div class="flex items-center gap-4">
+                    <div class="text-4xl">🏆</div>
+                    <div>
+                        <p class="text-violet-600 font-semibold">Test Complete!</p>
+                        <p class="text-xl font-bold text-gray-900">Score: 4 / 5</p>
+                    </div>
+                </div>
+                <!-- Circular Progress -->
+                <div class="relative w-16 h-16">
+                    <svg class="w-full h-full" viewBox="0 0 36 36">
+                        <path class="text-gray-200" stroke-width="3" fill="none" stroke="currentColor" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        <path class="text-emerald-500" stroke-dasharray="80, 100" stroke-width="3" stroke-linecap="round" fill="none" stroke="currentColor" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center font-bold text-sm">80%</div>
+                </div>
+            </div>
+
+            <button class="w-full bg-violet-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-violet-700 transition">
+                Create New Test
+            </button>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

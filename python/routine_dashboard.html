@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Routine Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gray-50 flex justify-center p-4">
+  <div class="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-blue-600 p-4 flex items-center gap-3 text-white">
+      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none"><path d="M7 10h10M7 14h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h1 class="text-xl font-semibold">1. Routine</h1>
+    </div>
+
+    <div class="p-5 space-y-4">
+      <p class="text-gray-600 text-sm">Add your fixed daily blocks so the AI knows your free time.</p>
+
+      <input id="activityInput" type="text" placeholder="Activity (e.g., School, Dinner)" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+
+      <div class="flex gap-2">
+        <input id="startTime" type="time" class="flex-1 p-2 border border-gray-200 rounded-lg text-sm" />
+        <input id="endTime" type="time" class="flex-1 p-2 border border-gray-200 rounded-lg text-sm" />
+        <button id="addBtn" class="bg-blue-600 text-white px-6 rounded-lg font-medium flex items-center gap-1 hover:bg-blue-700">Add</button>
+      </div>
+
+      <h2 class="font-semibold text-gray-800 pt-2">Your Routine</h2>
+
+      <div id="list" class="space-y-3"></div>
+
+      <div class="mt-6 bg-blue-50 p-3 rounded-lg flex gap-3 text-blue-700 text-sm border border-blue-100">
+        <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none"><path d="M13 16h-1v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <p>Tip: Add all your fixed activities to get the best study plan!</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const activities = [
+      { id: 1, name: 'School', time: '08:00 AM - 02:30 PM', icon: '🏫', color: 'bg-blue-100' },
+      { id: 2, name: 'Lunch', time: '02:30 PM - 03:00 PM', icon: '🍴', color: 'bg-green-100' },
+      { id: 3, name: 'Tuition', time: '04:00 PM - 06:00 PM', icon: '📖', color: 'bg-purple-100' },
+      { id: 4, name: 'Dinner', time: '08:30 PM - 09:00 PM', icon: '🍽️', color: 'bg-orange-100' },
+      { id: 5, name: 'Sleep', time: '10:30 PM - 06:00 AM', icon: '🌙', color: 'bg-pink-100' },
+    ];
+
+    const listEl = document.getElementById('list');
+    function render() {
+      listEl.innerHTML = '';
+      activities.forEach(act => {
+        const item = document.createElement('div');
+        item.className = 'flex items-center justify-between p-3 border border-gray-100 rounded-xl hover:border-gray-200 transition-colors';
+        item.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 ${act.color} rounded-full flex items-center justify-center text-lg">${act.icon}</div>
+            <div>
+              <div class="font-medium text-gray-800 text-sm">${act.name}</div>
+              <div class="text-xs text-gray-500">${act.time}</div>
+            </div>
+          </div>
+          <button data-id="${act.id}" class="text-red-400 hover:text-red-600 p-2 removeBtn">Remove</button>
+        `;
+        listEl.appendChild(item);
+      });
+
+      document.querySelectorAll('.removeBtn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = Number(e.currentTarget.getAttribute('data-id'));
+          const idx = activities.findIndex(a => a.id === id);
+          if (idx > -1) {
+            activities.splice(idx, 1);
+            render();
+          }
+        });
+      });
+    }
+
+    document.getElementById('addBtn').addEventListener('click', () => {
+      const name = document.getElementById('activityInput').value.trim();
+      const start = document.getElementById('startTime').value;
+      const end = document.getElementById('endTime').value;
+      if (!name || !start || !end) return alert('Please fill all fields');
+      const fmt = (t) => {
+        const [hh,mm] = t.split(':');
+        let hrs = Number(hh);
+        const ampm = hrs >= 12 ? 'PM' : 'AM';
+        hrs = hrs % 12 || 12;
+        return `${hrs.toString().padStart(2,'0')}:${mm} ${ampm}`;
+      };
+      activities.push({ id: Date.now(), name, time: `${fmt(start)} - ${fmt(end)}`, icon: '📌', color: 'bg-gray-100' });
+      document.getElementById('activityInput').value = '';
+      document.getElementById('startTime').value = '';
+      document.getElementById('endTime').value = '';
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

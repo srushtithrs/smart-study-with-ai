@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Plan Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+        
+        <div class="bg-green-600 p-4 text-white flex items-center gap-3">
+            <div class="text-2xl">🧠</div>
+            <h2 class="text-xl font-bold">3. Smart Plan</h2>
+        </div>
+
+        <div class="p-5">
+            <p class="text-gray-600 text-sm mb-5 leading-relaxed">
+                This will look at your exams and schedule them around your daily routine.
+            </p>
+
+            <button class="w-full bg-green-600 text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2 shadow-sm hover:bg-green-700 transition-colors">
+                <span>✨</span> Generate My Plan
+            </button>
+
+            <div class="mt-6 bg-green-50 border border-green-100 rounded-xl p-4">
+                <h3 class="font-bold text-gray-800 flex items-center gap-2 mb-1">
+                    <span>📅</span> YOUR SMART STUDY SCHEDULE
+                </h3>
+                <div class="text-gray-400 font-mono text-sm mb-4">============================</div>
+
+                <div class="space-y-4">
+                    <!-- Mathematics -->
+                    <div>
+                        <h4 class="font-bold text-green-700">1. Mathematics <span class="text-gray-600 font-normal">(Exam: 25 May 2025)</span></h4>
+                        <ul class="text-gray-700 text-sm ml-4 mt-1 space-y-0.5">
+                            <li>• Days Remaining: 6</li>
+                            <li>• Daily Target: ~3.3 hours/day</li>
+                        </ul>
+                    </div>
+
+                    <!-- Physics -->
+                    <div>
+                        <h4 class="font-bold text-green-700">2. Physics <span class="text-gray-600 font-normal">(Exam: 02 June 2025)</span></h4>
+                        <ul class="text-gray-700 text-sm ml-4 mt-1 space-y-0.5">
+                            <li>• Days Remaining: 14</li>
+                            <li>• Daily Target: ~1.3 hours/day</li>
+                        </ul>
+                    </div>
+
+                    <!-- Chemistry -->
+                    <div>
+                        <h4 class="font-bold text-green-700">3. Chemistry <span class="text-gray-600 font-normal">(Exam: 08 June 2025)</span></h4>
+                        <ul class="text-gray-700 text-sm ml-4 mt-1 space-y-0.5">
+                            <li>• Days Remaining: 20</li>
+                            <li>• Daily Target: ~0.8 hours/day</li>
+                        </ul>
+                    </div>
+
+                    <!-- English -->
+                    <div>
+                        <h4 class="font-bold text-green-700">4. English <span class="text-gray-600 font-normal">(Exam: 15 June 2025)</span></h4>
+                        <ul class="text-gray-700 text-sm ml-4 mt-1 space-y-0.5">
+                            <li>• Days Remaining: 27</li>
+                            <li>• Daily Target: ~0.4 hours/day</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-gray-100 space-y-3">
+                <p class="text-sm text-green-800 flex items-start gap-2">
+                    <span class="mt-0.5">💡</span> TIP: Study during your free time blocks from Routine tab.
+                </p>
+                <p class="text-sm text-green-800 flex items-start gap-2">
+                    <span class="mt-0.5">💡</span> TIP: Use Test Mode daily to improve your score!
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

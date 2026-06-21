@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Student Dashboard</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f5ff',
+                            100: '#e0ebff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Glassmorphic custom CSS and animations -->
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .dark .glass-card {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+        /* Hide native number input arrows */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body class="bg-slate-50/50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 min-h-screen font-sans transition-colors duration-300 custom-scrollbar">
+
+    <!-- Mobile Hamburger Menu Button -->
+    <div class="lg:hidden fixed top-4 left-4 z-50">
+        <button id="mobileMenuBtn" class="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg text-slate-700 dark:text-slate-300">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+    </div>
+
+    <!-- Layout Wrapper -->
+    <div class="flex min-h-screen">
+
+        <!-- Sidebar Section -->
+        <aside id="sidebar" class="w-64 bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800/80 p-6 flex flex-col justify-between fixed lg:sticky left-0 top-0 h-screen z-40 transition-transform duration-300 -translate-x-full lg:translate-x-0 shadow-xl lg:shadow-none">
+            <div>
+                <!-- Brand / Logo -->
+                <div class="flex items-center gap-3 mb-6 mt-4 lg:mt-0">
+                    <div class="bg-gradient-to-tr from-brand-500 to-indigo-600 p-2.5 rounded-xl text-white shadow-md shadow-brand-500/20">
+                        <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-extrabold text-lg bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent">Smart Student</h1>
+                        <span class="text-[10px] uppercase tracking-wider font-bold text-slate-400 dark:text-slate-500">Workspace V1.0</span>
+                    </div>
+                </div>
+
+                <!-- User Profile Card -->
+                <div class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800/50 rounded-2xl mb-6">
+                    <div class="w-11 h-11 bg-gradient-to-tr from-brand-100 to-brand-200 dark:from-brand-900/40 dark:to-brand-800/40 rounded-full flex items-center justify-center font-extrabold text-brand-600 dark:text-brand-400 shadow-inner">
+                        S
+                    </div>
+                    <div class="overflow-hidden">
+                        <h2 class="font-bold text-slate-800 dark:text-slate-200 truncate" id="profileNameDisplay">Hello, Suji! 👋</h2>
+                        <p class="text-xs text-slate-400 dark:text-slate-500 truncate">Keep learning & growing</p>
+                    </div>
+                </div>
+
+                <!-- Study Streak Widget -->
+                <div class="bg-gradient-to-br from-amber-500/10 to-orange-500/10 dark:from-amber-500/5 dark:to-orange-500/5 p-4 rounded-2xl mb-6 border border-amber-500/20 dark:border-amber-500/10 relative overflow-hidden">
+                    <div class="absolute -right-4 -bottom-4 text-orange-500/10 dark:text-orange-500/5">
+                        <i data-lucide="flame" class="w-16 h-16" fill="currentColor"></i>
+                    </div>
+                    <div class="flex items-center gap-2 text-amber-600 dark:text-amber-400 mb-1 z-10 relative">
+                        <i data-lucide="flame" class="w-4 h-4" fill="currentColor"></i>
+                        <span class="font-bold text-xs uppercase tracking-wider">Study Streak</span>
+                    </div>
+                    <p class="text-3xl font-extrabold text-slate-800 dark:text-slate-200 z-10 relative" id="streakDisplay">7 days</p>
+                    <p class="text-xs text-orange-500/80 dark:text-orange-400/70 mt-1 font-medium z-10 relative">You're doing great! 🔥</p>
+                </div>
+
+                <!-- Navigation List -->
+                <nav class="space-y-1.5" id="navLinks">
+                    <!-- Navigation links will be dynamically populated/highlighted -->
+                </nav>
+            </div>
+
+            <!-- Sidebar Footer -->
+            <div class="mt-8 space-y-4">
+                <!-- Inspiring Quote Widget -->
+                <div class="bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-slate-800/40 p-3.5 rounded-2xl text-[11px] leading-relaxed text-slate-500 dark:text-slate-400 italic">
+                    "The future depends on what you do today." <br>
+                    <span class="font-semibold not-italic block text-right mt-1.5 text-slate-400 dark:text-slate-500">— Mahatma Gandhi</span>
+                </div>
+                
+                <!-- Dark Mode / Theme Toggle -->
+                <button id="themeToggleBtn" class="w-full flex items-center justify-between px-4 py-2.5 bg-slate-50 dark:bg-slate-950/40 hover:bg-slate-100 dark:hover:bg-slate-800/50 border border-slate-100 dark:border-slate-800/40 text-slate-600 dark:text-slate-400 rounded-xl transition duration-200 text-sm font-semibold">
+                    <span class="flex items-center gap-2">
+                        <i id="themeIcon" data-lucide="moon" class="w-4 h-4"></i>
+                        <span id="themeLabel">Dark Mode</span>
+                    </span>
+                    <span class="w-8 h-4 bg-slate-300 dark:bg-slate-700 rounded-full flex items-center p-0.5 transition duration-300">
+                        <span id="themeDot" class="w-3 h-3 bg-white dark:bg-slate-950 rounded-full shadow transition transform duration-300 translate-x-0 dark:translate-x-4"></span>
+                    </span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 min-h-screen flex flex-col p-4 md:p-8 lg:p-10 transition-all duration-300 lg:pl-8">
+            <!-- Navbar Header -->
+            <header class="flex justify-between items-center mb-8 gap-4 mt-12 lg:mt-0 animate-fade-in" style="animation-delay: 0.05s;">
+                <div class="flex items-center gap-3">
+                    <div class="lg:hidden w-10"></div> <!-- spacing for mobile menu button -->
+                    <div>
+                        <h1 class="text-2xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight" id="panelTitle">Dashboard Overview</h1>
+                        <p class="text-sm text-slate-400 dark:text-slate-500 font-medium" id="panelSubtitle">Manage your routine, exams, study schedules, and quizzes.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <!-- Notification Icon -->
+                    <div class="relative">
+                        <button id="notificationBtn" class="p-2.5 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 rounded-xl text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400 shadow-sm hover:shadow transition">
+                            <i data-lucide="bell" class="w-5 h-5"></i>
+                            <span class="absolute top-1.5 right-1.5 bg-rose-500 text-white text-[9px] font-extrabold w-4 h-4 flex items-center justify-center rounded-full border-2 border-white dark:border-slate-900 animate-pulse">2</span>
+                        </button>
+                        <!-- Notification Dropdown -->
+                        <div id="notificationDropdown" class="absolute right-0 mt-2.5 w-72 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-2xl shadow-xl py-3 px-4 hidden z-50 animate-fade-in">
+                            <h4 class="font-bold text-xs text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Notifications</h4>
+                            <div class="space-y-3.5 mt-2">
+                                <div class="flex gap-2.5 text-xs">
+                                    <div class="w-2 h-2 rounded-full bg-brand-500 mt-1.5 shrink-0"></div>
+                                    <div>
+                                        <p class="font-semibold text-slate-800 dark:text-slate-200">Prepare for Mathematics!</p>
+                                        <p class="text-[10px] text-slate-400 mt-0.5">Exam is in 9 days. Study target is 3.3 hrs/day.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2.5 text-xs">
+                                    <div class="w-2 h-2 rounded-full bg-brand-500 mt-1.5 shrink-0"></div>
+                                    <div>
+                                        <p class="font-semibold text-slate-800 dark:text-slate-200">Practice Quiz Available</p>
+                                        <p class="text-[10px] text-slate-400 mt-0.5">Test your concepts in Test Mode to improve average scores.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Settings quick btn -->
+                    <button onclick="switchView('settings')" class="p-2.5 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 rounded-xl text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400 shadow-sm hover:shadow transition">
+                        <i data-lucide="settings" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Main Render Area -->
+            <div id="viewContainer" class="flex-1 animate-fade-in" style="animation-delay: 0.1s;">
+                <!-- Content gets injected here by loadView() -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Client-Side State & Panel Renderer Script -->
+    <script>
+        // Check local storage for initial settings
+        const STATEDB_KEY = 'smart_student_db_v2';
+        
+        const initialDefaultState = {
+            profileName: "Suji",
+            streak: 7,
+            routine: [
+                { id: 1, name: 'School', time: '08:00 AM - 02:30 PM', icon: '🏫', color: 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800/40' },
+                { id: 2, name: 'Lunch', time: '02:30 PM - 03:00 PM', icon: '🍴', color: 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/40' },
+                { id: 3, name: 'Tuition', time: '04:00 PM - 06:00 PM', icon: '📖', color: 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800/40' },
+                { id: 4, name: 'Dinner', time: '08:30 PM - 09:00 PM', icon: '🍽️', color: 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800/40' },
+                { id: 5, name: 'Sleep', time: '10:30 PM - 06:00 AM', icon: '🌙', color: 'bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800/40' },
+            ],
+            exams: [
+                { id: 1, subject: 'Mathematics', date: '2026-06-25', time: '10:00', hours: 20 },
+                { id: 2, subject: 'Physics', date: '2026-07-02', time: '14:00', hours: 18 },
+                { id: 3, subject: 'Chemistry', date: '2026-07-08', time: '10:00', hours: 15 },
+                { id: 4, subject: 'English', date: '2026-07-15', time: '09:00', hours: 10 },
+            ],
+            questions: [
+                { id: 1, question: "What is the capital of France?", options: ["Paris", "London", "Rome", "Berlin"], answer: "A" },
+                { id: 2, question: "Which planet is known as the Red Planet?", options: ["Earth", "Mars", "Jupiter", "Venus"], answer: "B" },
+                { id: 3, question: "What is the chemical symbol for water?", options: ["CO2", "H2O", "NaCl", "O2"], answer: "B" },
+                { id: 4, question: "What is 7 multiplied by 8?", options: ["54", "56", "64", "48"], answer: "B" },
+                { id: 5, question: "Who wrote 'Romeo and Juliet'?", options: ["Charles Dickens", "William Shakespeare", "Mark Twain", "Jane Austen"], answer: "B" }
+            ],
+            testsTaken: 3,
+            scores: [80, 60, 100], // Average score is 80%
+            darkMode: false,
+            activeView: 'dashboard'
+        };
+
+        const BACKEND_URL = window.location.origin.startsWith('file') ? 'http://localhost:5000' : '';
+
+        // Load State from LocalStorage
+        let state = JSON.parse(localStorage.getItem(STATEDB_KEY)) || initialDefaultState;
+
+        // Apply dark mode styling on load
+        if (state.darkMode) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        // Theme Toggle Logic
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeLabel = document.getElementById('themeLabel');
+        const themeDot = document.getElementById('themeDot');
+
+        function updateThemeUI() {
+            if (state.darkMode) {
+                document.documentElement.classList.add('dark');
+                themeLabel.textContent = "Dark Mode";
+                themeIcon.setAttribute('data-lucide', 'moon');
+                themeDot.classList.add('translate-x-4');
+            } else {
+                document.documentElement.classList.remove('dark');
+                themeLabel.textContent = "Light Mode";
+                themeIcon.setAttribute('data-lucide', 'sun');
+                themeDot.classList.remove('translate-x-4');
+            }
+            lucide.createIcons();
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            state.darkMode = !state.darkMode;
+            saveState();
+            updateThemeUI();
+        });
+
+        // Save State Helper
+        function saveState() {
+            localStorage.setItem(STATEDB_KEY, JSON.stringify(state));
+            updateProfileAndStreak();
+
+            // Asynchronously sync state to backend
+            fetch(`${BACKEND_URL}/api/save`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(state)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.ok) {
+                    console.error("Failed to sync state to backend:", data);
+                }
+            })
+            .catch(err => {
+                console.warn("Backend state sync offline/failed:", err);
+            });
+        }
+
+        // Async function to load state from the backend
+        async function loadStateFromBackend() {
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/state`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && Object.keys(data).length > 0) {
+                        // Merge backend state with initialDefaultState to preserve schema
+                        state = { ...initialDefaultState, ...data };
+                        localStorage.setItem(STATEDB_KEY, JSON.stringify(state));
+                        updateThemeUI();
+                        updateProfileAndStreak();
+                        
+                        // Reload active pane
+                        const currentHash = window.location.hash.replace('#', '');
+                        if (currentHash && navigationItems.some(n => n.id === currentHash)) {
+                            switchView(currentHash);
+                        } else {
+                            switchView(state.activeView);
+                        }
+                    }
+                }
+            } catch (err) {
+                console.warn("Backend API offline. Using local storage state.", err);
+            }
+        }
+
+        function updateProfileAndStreak() {
+            document.getElementById('profileNameDisplay').textContent = `Hello, ${state.profileName}! 👋`;
+            document.getElementById('streakDisplay').textContent = `${state.streak} days`;
+        }
+
+        // Anchor Date for countdowns (June 16, 2026 based on prompt metadata)
+        const CURRENT_DATE_STR = '2026-06-16';
+        const getAnchorDate = () => new Date(CURRENT_DATE_STR);
+
+        // Helper to calculate days remaining
+        function calculateDaysRemaining(dateStr) {
+            const today = getAnchorDate();
+            const target = new Date(dateStr);
+            // reset time components
+            today.setHours(0,0,0,0);
+            target.setHours(0,0,0,0);
+            const diff = target.getTime() - today.getTime();
+            const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+            return days;
+        }
+
+        // Navigation configuration
+        const navigationItems = [
+            { id: 'dashboard', name: 'Dashboard', icon: 'layout-dashboard', subtitle: 'Your smart overview dashboard' },
+            { id: 'routine', name: 'Routine', icon: 'calendar', subtitle: 'Schedule fixed daily activities' },
+            { id: 'exams', name: 'Exams', icon: 'file-text', subtitle: 'Keep track of upcoming deadlines' },
+            { id: 'smart-plan', name: 'Smart Plan', icon: 'brain', subtitle: 'AI study goals based on schedules' },
+            { id: 'test-mode', name: 'Test Mode', icon: 'check-square', subtitle: 'Practice with custom test quizzes' },
+            { id: 'analytics', name: 'Analytics', icon: 'target', subtitle: 'Inspect study time & score metrics' },
+            { id: 'calendar-view', name: 'Calendar', icon: 'calendar-days', subtitle: 'Interactive schedule organizer' },
+            { id: 'settings', name: 'Settings', icon: 'settings', subtitle: 'Customize profile and dashboard config' }
+        ];
+
+        // Populate Sidebar Navigation
+        function renderNavigation() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.innerHTML = '';
+
+            // Group 1: Core Panel Navigation
+            const group1 = ['dashboard', 'routine', 'exams', 'smart-plan', 'test-mode'];
+            // Group 2: Progress & Options
+            const group2 = ['analytics', 'calendar-view', 'settings'];
+
+            group1.forEach(id => {
+                const nav = navigationItems.find(n => n.id === id);
+                navLinks.appendChild(createNavLinkElement(nav));
+            });
+
+            // Divider line
+            const divider = document.createElement('div');
+            divider.className = "my-4 border-t border-slate-100 dark:border-slate-800/80";
+            navLinks.appendChild(divider);
+
+            group2.forEach(id => {
+                const nav = navigationItems.find(n => n.id === id);
+                navLinks.appendChild(createNavLinkElement(nav));
+            });
+        }
+
+        function createNavLinkElement(nav) {
+            const a = document.createElement('a');
+            a.href = `#${nav.id}`;
+            const isActive = state.activeView === nav.id;
+            
+            a.className = `flex items-center gap-3 p-3 rounded-xl transition duration-200 text-sm font-semibold select-none ${
+                isActive 
+                ? 'bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/15' 
+                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/30 hover:text-slate-950 dark:hover:text-slate-100 border border-transparent'
+            }`;
+            
+            a.innerHTML = `<i data-lucide="${nav.icon}" class="w-5 h-5 shrink-0"></i> <span>${nav.name}</span>`;
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchView(nav.id);
+            });
+            return a;
+        }
+
+        // View Switcher logic
+        function switchView(viewId) {
+            state.activeView = viewId;
+            saveState();
+            renderNavigation();
+            
+            const viewConfig = navigationItems.find(n => n.id === viewId);
+            if (viewConfig) {
+                document.getElementById('panelTitle').textContent = viewConfig.name;
+                document.getElementById('panelSubtitle').textContent = viewConfig.subtitle;
+            }
+
+            // Close mobile menu on switch
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+
+            loadView(viewId);
+        }
+
+        // Handle URL Hash Navigation
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.replace('#', '');
+            if (navigationItems.some(n => n.id === hash)) {
+                switchView(hash);
+            }
+        });
+
+        // Main Router Function to inject view content
+        function loadView(viewId) {
+            const container = document.getElementById('viewContainer');
+            container.innerHTML = '';
+            
+            // Add custom animation trigger
+            container.className = "flex-1 animate-fade-in";
+
+            switch (viewId) {
+                case 'dashboard':
+                    renderDashboardView(container);
+                    break;
+                case 'routine':
+                    renderRoutineView(container);
+                    break;
+                case 'exams':
+                    renderExamsView(container);
+                    break;
+                case 'smart-plan':
+                    renderSmartPlanView(container);
+                    break;
+                case 'test-mode':
+                    renderTestModeView(container);
+                    break;
+                case 'analytics':
+                    renderAnalyticsView(container);
+                    break;
+                case 'calendar-view':
+                    renderCalendarView(container);
+                    break;
+                case 'settings':
+                    renderSettingsView(container);
+                    break;
+                default:
+                    container.innerHTML = `<div class="p-6">View not found</div>`;
+            }
+            lucide.createIcons();
+        }
+
+        // ==========================================
+        // VIEW RENDERING: 1. DASHBOARD OVERVIEW
+        // ==========================================
+        function renderDashboardView(container) {
+            // Stats Calculations
+            const upcomingExamsCount = state.exams.length;
+            
+            // Calculate planned study hours
+            const totalPlannedHours = state.exams.reduce((acc, exam) => acc + parseInt(exam.hours || 0), 0);
+            
+            // Calculate Average Score
+            let averageScore = 0;
+            if (state.scores.length > 0) {
+                const sum = state.scores.reduce((a, b) => a + b, 0);
+                averageScore = Math.round(sum / state.scores.length);
+            } else {
+                averageScore = 78; // Fallback default
+            }
+
+            const testsCount = state.testsTaken;
+
+            // HTML Grid of stats cards
+            const gridHtml = `
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <!-- Exams Card -->
+                    <div onclick="switchView('exams')" class="glass-card p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm transition-all duration-300 hover:shadow-md hover:scale-[1.02] cursor-pointer group relative overflow-hidden">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-brand-500/5 rounded-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                        <div class="flex justify-between items-start">
+                            <div class="p-3 bg-brand-50 dark:bg-brand-950/50 rounded-2xl text-brand-600 dark:text-brand-400 group-hover:bg-brand-500 group-hover:text-white transition duration-300">
+                                <i data-lucide="book-open" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Exam Board</span>
+                        </div>
+                        <div class="mt-6">
+                            <h3 class="text-sm font-semibold text-slate-400 dark:text-slate-500">Upcoming Exams</h3>
+                            <p class="text-4xl font-extrabold text-slate-800 dark:text-slate-100 mt-1.5">${upcomingExamsCount}</p>
+                            <p class="text-xs text-slate-400 dark:text-slate-500 mt-2 flex items-center gap-1">
+                                <i data-lucide="clock" class="w-3.5 h-3.5"></i> Scheduled targets active
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Study Hours Card -->
+                    <div onclick="switchView('smart-plan')" class="glass-card p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm transition-all duration-300 hover:shadow-md hover:scale-[1.02] cursor-pointer group relative overflow-hidden">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-emerald-500/5 rounded-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                        <div class="flex justify-between items-start">
+                            <div class="p-3 bg-emerald-50 dark:bg-emerald-950/50 rounded-2xl text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition duration-300">
+                                <i data-lucide="clock" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Study Load</span>
+                        </div>
+                        <div class="mt-6">
+                            <h3 class="text-sm font-semibold text-slate-400 dark:text-slate-500">Study Hours Planned</h3>
+                            <p class="text-4xl font-extrabold text-slate-800 dark:text-slate-100 mt-1.5">${totalPlannedHours}h</p>
+                            <p class="text-xs text-emerald-500 mt-2 flex items-center gap-1 font-medium">
+                                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Custom targets set
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Tests Taken Card -->
+                    <div onclick="switchView('test-mode')" class="glass-card p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm transition-all duration-300 hover:shadow-md hover:scale-[1.02] cursor-pointer group relative overflow-hidden">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-purple-500/5 rounded-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                        <div class="flex justify-between items-start">
+                            <div class="p-3 bg-purple-50 dark:bg-purple-950/50 rounded-2xl text-purple-600 dark:text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition duration-300">
+                                <i data-lucide="clipboard-check" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Assessments</span>
+                        </div>
+                        <div class="mt-6">
+                            <h3 class="text-sm font-semibold text-slate-400 dark:text-slate-500">Tests Taken</h3>
+                            <p class="text-4xl font-extrabold text-slate-800 dark:text-slate-100 mt-1.5">${testsCount}</p>
+                            <p class="text-xs text-purple-500 mt-2 flex items-center gap-1 font-medium">
+                                <i data-lucide="award" class="w-3.5 h-3.5"></i> Keep practicing daily
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Average Score Card -->
+                    <div onclick="switchView('analytics')" class="glass-card p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm transition-all duration-300 hover:shadow-md hover:scale-[1.02] cursor-pointer group relative overflow-hidden">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-orange-500/5 rounded-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                        <div class="flex justify-between items-start">
+                            <div class="p-3 bg-orange-50 dark:bg-orange-950/50 rounded-2xl text-orange-600 dark:text-orange-400 group-hover:bg-orange-500 group-hover:text-white transition duration-300">
+                                <i data-lucide="target" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Academics</span>
+                        </div>
+                        <div class="mt-6">
+                            <h3 class="text-sm font-semibold text-slate-400 dark:text-slate-500">Average Score</h3>
+                            <p class="text-4xl font-extrabold text-slate-800 dark:text-slate-100 mt-1.5">${averageScore}%</p>
+                            <p class="text-xs text-orange-500 mt-2 flex items-center gap-1 font-medium">
+                                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> Keep up the progress!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Main Welcome & Quick Start Panel -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="bg-gradient-to-tr from-brand-600 to-indigo-700 text-white rounded-3xl p-6 md:p-8 shadow-lg shadow-brand-500/10 relative overflow-hidden flex flex-col justify-between h-[220px]">
+                            <!-- Gradient graphics -->
+                            <div class="absolute right-0 top-0 w-64 h-64 bg-white/5 rounded-full -mr-16 -mt-16"></div>
+                            <div class="absolute left-1/3 bottom-0 w-32 h-32 bg-white/5 rounded-full -mb-12"></div>
+                            
+                            <div>
+                                <span class="bg-white/15 text-white/95 px-3 py-1 rounded-full text-[10px] tracking-widest font-extrabold uppercase select-none">Welcome back</span>
+                                <h3 class="text-2xl md:text-3xl font-extrabold tracking-tight mt-3">Suji's Workspace</h3>
+                                <p class="text-brand-100/90 text-sm mt-1 max-w-md">Your smart routines, study planners, deadlines, and practice quizzes consolidated into one control panel.</p>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-3">
+                                <button onclick="switchView('smart-plan')" class="bg-white text-brand-700 font-bold px-5 py-2.5 rounded-xl hover:bg-slate-50 shadow-md transition text-xs flex items-center gap-1.5">
+                                    <i data-lucide="sparkles" class="w-4 h-4"></i> Generate Study Schedule
+                                </button>
+                                <button onclick="switchView('test-mode')" class="bg-brand-700/40 text-brand-50 font-semibold px-4 py-2.5 rounded-xl border border-white/10 hover:bg-brand-700/60 transition text-xs flex items-center gap-1.5">
+                                    <i data-lucide="play" class="w-4 h-4"></i> Practice Quiz Test
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Mini Routine Overview -->
+                        <div class="glass-card rounded-3xl border border-slate-100 dark:border-slate-800 p-6 shadow-sm">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-2 text-base">
+                                    <i data-lucide="clock" class="w-5 h-5 text-brand-500"></i> Daily Routine Blocks
+                                </h3>
+                                <button onclick="switchView('routine')" class="text-xs font-bold text-brand-500 hover:text-brand-600 dark:hover:text-brand-400 hover:underline">Edit Routine</button>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="dashRoutineList">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Exam Countdown Progress & Quick Alerts -->
+                    <div class="space-y-6">
+                        <!-- Upcoming Deadlines -->
+                        <div class="glass-card rounded-3xl border border-slate-100 dark:border-slate-800 p-6 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-2 text-base">
+                                        <i data-lucide="calendar" class="w-5 h-5 text-rose-500"></i> Exam Schedule
+                                    </h3>
+                                    <button onclick="switchView('exams')" class="text-xs font-bold text-brand-500 hover:text-brand-600 dark:hover:text-brand-400 hover:underline">Add Exam</button>
+                                </div>
+                                <div class="space-y-3" id="dashExamsList">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Progress Circle Tip Box -->
+                        <div class="glass-card rounded-3xl border border-slate-100 dark:border-slate-800 p-5 shadow-sm bg-gradient-to-br from-indigo-500/5 to-purple-500/5 dark:from-indigo-500/0 dark:to-purple-500/0">
+                            <h4 class="font-extrabold text-xs uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Workspace Tip</h4>
+                            <div class="flex gap-3 items-start">
+                                <div class="p-2 bg-purple-50 dark:bg-purple-950/40 rounded-xl text-purple-600 dark:text-purple-400 shrink-0">
+                                    <i data-lucide="lightbulb" class="w-4 h-4"></i>
+                                </div>
+                                <p class="text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+                                    Keeping your study streak updated increases discipline. Add all subject exam hours to plan study routines dynamically.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = gridHtml;
+
+            // Render Routine Preview Items
+            const routineContainer = document.getElementById('dashRoutineList');
+            if (state.routine.length === 0) {
+                routineContainer.innerHTML = `<p class="col-span-2 text-xs text-slate-400 text-center py-4">No routines added yet.</p>`;
+            } else {
+                state.routine.slice(0, 4).forEach(act => {
+                    const div = document.createElement('div');
+                    div.className = "flex items-center gap-3 p-3 bg-slate-50/60 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/40 rounded-2xl";
+                    div.innerHTML = `
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-lg ${act.color.split(' ')[0]} ${act.color.split(' ')[1] || ''}">
+                            ${act.icon}
+                        </div>
+                        <div class="overflow-hidden">
+                            <p class="font-bold text-xs text-slate-800 dark:text-slate-200 truncate">${act.name}</p>
+                            <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5 truncate">${act.time}</p>
+                        </div>
+                    `;
+                    routineContainer.appendChild(div);
+                });
+            }
+
+            // Render Exam Deadlines
+            const examsContainer = document.getElementById('dashExamsList');
+            if (state.exams.length === 0) {
+                examsContainer.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">No exams scheduled yet.</p>`;
+            } else {
+                state.exams.slice(0, 3).forEach(exam => {
+                    const days = calculateDaysRemaining(exam.date);
+                    let urgencyColor = "text-emerald-500 bg-emerald-500/10 border-emerald-500/20";
+                    let prefixIcon = "calendar";
+                    if (days <= 5) {
+                        urgencyColor = "text-rose-500 bg-rose-500/10 border-rose-500/20";
+                        prefixIcon = "alert-circle";
+                    } else if (days <= 10) {
+                        urgencyColor = "text-amber-500 bg-amber-500/10 border-amber-500/20";
+                        prefixIcon = "clock";
+                    }
+
+                    const div = document.createElement('div');
+                    div.className = "flex items-center justify-between p-3.5 bg-slate-50/60 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/40 rounded-2xl transition-all duration-200 hover:border-slate-200 dark:hover:border-slate-800";
+                    div.innerHTML = `
+                        <div class="overflow-hidden pr-2">
+                            <h4 class="font-extrabold text-xs text-slate-800 dark:text-slate-200 truncate">${exam.subject}</h4>
+                            <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-1 flex items-center gap-1">
+                                <i data-lucide="calendar" class="w-3 h-3"></i> ${formatDate(exam.date)} @ ${exam.time}
+                            </p>
+                        </div>
+                        <div class="px-3 py-1 rounded-xl border text-[10px] font-extrabold flex items-center gap-1 shrink-0 ${urgencyColor}">
+                            <i data-lucide="${prefixIcon}" class="w-3.5 h-3.5"></i>
+                            ${days <= 0 ? 'Today/Passed' : `${days} days left`}
+                        </div>
+                    `;
+                    examsContainer.appendChild(div);
+                });
+            }
+        }
+
+        // ==========================================
+        // VIEW RENDERING: 2. ROUTINE PANEL
+        // ==========================================
+        function renderRoutineView(container) {
+            const html = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Left: Form to Add Routine -->
+                    <div class="glass-card p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm space-y-5 h-fit">
+                        <div>
+                            <h3 class="font-extrabold text-base text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                <i data-lucide="plus-circle" class="w-5 h-5 text-brand-500"></i> Add Daily Block
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1 leading-relaxed">Schedule routine times so the plan can align with free periods.</p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Activity Name</label>
+                                <input type="text" id="routineNameInput" placeholder="e.g. School, Lunch, Sleep" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition font-medium text-sm">
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Start Time</label>
+                                    <input type="time" id="routineStartInput" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition font-medium text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">End Time</label>
+                                    <input type="time" id="routineEndInput" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition font-medium text-sm">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Choose Icon & Style</label>
+                                <div class="grid grid-cols-5 gap-2" id="routineStyleGrid">
+                                    <button onclick="selectRoutineStyle(0)" class="routine-style-btn p-3 border-2 border-brand-500 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-lg hover:scale-105 transition" data-icon="🏫" data-color="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800/40">🏫</button>
+                                    <button onclick="selectRoutineStyle(1)" class="routine-style-btn p-3 border-2 border-transparent rounded-xl bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg hover:scale-105 transition" data-icon="📖" data-color="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/40">📖</button>
+                                    <button onclick="selectRoutineStyle(2)" class="routine-style-btn p-3 border-2 border-transparent rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center text-lg hover:scale-105 transition" data-icon="🍴" data-color="bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800/40">🍴</button>
+                                    <button onclick="selectRoutineStyle(3)" class="routine-style-btn p-3 border-2 border-transparent rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg hover:scale-105 transition" data-icon="🍽️" data-color="bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800/40">🍽️</button>
+                                    <button onclick="selectRoutineStyle(4)" class="routine-style-btn p-3 border-2 border-transparent rounded-xl bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center text-lg hover:scale-105 transition" data-icon="🌙" data-color="bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800/40">🌙</button>
+                                </div>
+                            </div>
+
+                            <button onclick="addRoutineBlock()" class="w-full py-3 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white rounded-xl font-bold text-sm shadow-md shadow-brand-500/15 transition flex items-center justify-center gap-2 mt-2">
+                                <i data-lucide="plus" class="w-4 h-4"></i> Add to Routine
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Lists of Active Routines -->
+                    <div class="lg:col-span-2 glass-card p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-extrabold text-base text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                    <i data-lucide="clock" class="w-5 h-5 text-brand-500"></i> Active Routine Blocks
+                                </h3>
+                                <span class="bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 px-3 py-1 rounded-full text-xs font-bold" id="routineBlocksCount">5 blocks</span>
+                            </div>
+                            <div class="space-y-3 overflow-y-auto max-h-[380px] pr-2 custom-scrollbar" id="routineList">
+                                <!-- Routine items rendered dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Routine Tips -->
+                        <div class="mt-6 bg-brand-500/5 dark:bg-brand-500/0 border border-brand-500/10 p-4 rounded-2xl flex gap-3 text-brand-700 dark:text-brand-400 text-xs">
+                            <i data-lucide="info" class="w-4 h-4 shrink-0 text-brand-500"></i>
+                            <p class="leading-relaxed">
+                                <strong>Tip:</strong> Keep study periods interactive by integrating fixed time blocks. A standard study routine recommends 2.5-hour maximum study cycles followed by a 30-minute block for recovery.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
+            
+            // Set first style active by default
+            window.selectedStyleIdx = 0;
+            renderRoutineItemsList();
+        }
+
+        // Selected Routine Icon Index Style Handler
+        function selectRoutineStyle(idx) {
+            const btns = document.querySelectorAll('.routine-style-btn');
+            btns.forEach((btn, i) => {
+                if (i === idx) {
+                    btn.classList.add('border-brand-500');
+                    btn.classList.remove('border-transparent');
+                } else {
+                    btn.classList.add('border-transparent');
+                    btn.classList.remove('border-brand-500');
+                }
+            });
+            window.selectedStyleIdx = idx;
+        }
+
+        function renderRoutineItemsList() {
+            const listContainer = document.getElementById('routineList');
+            const countDisplay = document.getElementById('routineBlocksCount');
+            listContainer.innerHTML = '';
+            countDisplay.textContent = `${state.routine.length} blocks`;
+
+            if (state.routine.length === 0) {
+                listContainer.innerHTML = `<p class="text-xs text-slate-400 text-center py-12">No routines added yet. Fill out the form to create study blocks!</p>`;
+                return;
+            }
+
+            state.routine.forEach((act) => {
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between p-3.5 bg-slate-50/60 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/40 rounded-2xl hover:border-slate-200 dark:hover:border-slate-800 transition duration-200";
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-xl shadow-sm ${act.color.split(' ')[0]} ${act.color.split(' ')[1] || ''}">
+                            ${act.icon}
+                        </div>
+                        <div>
+                            <div class="font-extrabold text-sm text-slate-800 dark:text-slate-100">${act.name}</div>
+                            <div class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5 flex items-center gap-1 font-medium">
+                                <i data-lucide="clock" class="w-3.5 h-3.5"></i> ${act.time}
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="removeRoutineBlock(${act.id})" class="p-2 text-rose-500/80 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-xl transition duration-200">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                `;
+                listContainer.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        function addRoutineBlock() {
+            const nameInput = document.getElementById('routineNameInput');
+            const startInput = document.getElementById('routineStartInput');
+            const endInput = document.getElementById('routineEndInput');
+
+            const name = nameInput.value.trim();
+            const start = startInput.value;
+            const end = endInput.value;
+
+            if (!name || !start || !end) {
+                alert("Please fill in all routine fields!");
+                return;
+            }
+
+            // Time Formatting Helper (e.g. 08:30 -> 08:30 AM)
+            const formatTimeStr = (t) => {
+                const parts = t.split(':');
+                let hrs = parseInt(parts[0]);
+                const mins = parts[1];
+                const ampm = hrs >= 12 ? 'PM' : 'AM';
+                hrs = hrs % 12;
+                hrs = hrs ? hrs : 12; // 0 should be 12
+                const hrStr = hrs < 10 ? '0' + hrs : hrs;
+                return `${hrStr}:${mins} ${ampm}`;
+            };
+
+            const formattedTime = `${formatTimeStr(start)} - ${formatTimeStr(end)}`;
+
+            const selectedBtn = document.querySelectorAll('.routine-style-btn')[window.selectedStyleIdx];
+            const icon = selectedBtn.getAttribute('data-icon');
+            const color = selectedBtn.getAttribute('data-color');
+
+            const block = {
+                id: Date.now(),
+                name,
+                time: formattedTime,
+                icon,
+                color
+            };
+
+            state.routine.push(block);
+            saveState();
+
+            // Clear inputs
+            nameInput.value = '';
+            startInput.value = '';
+            endInput.value = '';
+
+            renderRoutineItemsList();
+        }
+
+        function removeRoutineBlock(id) {
+            state.routine = state.routine.filter(a => a.id !== id);
+            saveState();
+            renderRoutineItemsList();
+        }
+
+        // ==========================================
+        // VIEW RENDERING: 3. EXAMS PANEL
+        // ==========================================
+        function renderExamsView(container) {
+            const html = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Add Exam Form -->
+                    <div class="glass-card p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm space-y-5 h-fit">
+                        <div>
+                            <h3 class="font-extrabold text-base text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                <i data-lucide="plus-circle" class="w-5 h-5 text-rose-500"></i> Add Exam Schedule
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1 leading-relaxed">Insert exam parameters to dynamically align your schedules.</p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Subject</label>
+                                <input type="text" id="examSubjectInput" placeholder="e.g. Mathematics, Chemistry" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition font-medium text-sm">
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Exam Date</label>
+                                    <input type="date" id="examDateInput" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition font-medium text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Exam Time</label>
+                                    <input type="time" id="examTimeInput" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition font-medium text-sm">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Total Hours Needed</label>
+                                <div class="relative flex items-center">
+                                    <input type="number" id="examHoursInput" min="1" placeholder="e.g. 20" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition font-medium text-sm">
+                                    <span class="absolute right-4 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase">hours</span>
+                                </div>
+                            </div>
+
+                            <button onclick="addExamItem()" class="w-full py-3 bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white rounded-xl font-bold text-sm shadow-md shadow-rose-500/15 transition flex items-center justify-center gap-2 mt-2">
+                                <i data-lucide="plus" class="w-4 h-4"></i> Add Schedule
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Exams Schedule List -->
+                    <div class="lg:col-span-2 glass-card p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-extrabold text-base text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                    <i data-lucide="file-text" class="w-5 h-5 text-rose-500"></i> Upcoming Exams Calendar
+                                </h3>
+                                <span class="bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 px-3 py-1 rounded-full text-xs font-bold" id="examsCountBadge">4 Scheduled</span>
+                            </div>
+                            <div class="space-y-3 overflow-y-auto max-h-[380px] pr-2 custom-scrollbar" id="examsList">
+                                <!-- Exams list rendered dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Help Tip -->
+                        <div class="mt-6 bg-rose-500/5 dark:bg-rose-500/0 border border-rose-500/10 p-4 rounded-2xl flex gap-3 text-rose-700 dark:text-rose-400 text-xs">
+                            <i data-lucide="lightbulb" class="w-4 h-4 shrink-0 text-rose-500"></i>
+                            <p class="leading-relaxed">
+                                <strong>Exam prioritization:</strong> Schedule exams in chronological order. The system calculates study loads and alerts you when schedules require intense preparation blocks.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
+            renderExamsItemList();
+        }
+
+        // Format Date Helper
+        function formatDate(dateStr) {
+            const options = { day: 'numeric', month: 'short', year: 'numeric' };
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('en-US', options);
+        }
+
+        // Format Clock Time Helper
+        function formatClockTime(timeStr) {
+            if(!timeStr) return '';
+            const parts = timeStr.split(':');
+            let hrs = parseInt(parts[0]);
+            const mins = parts[1];
+            const ampm = hrs >= 12 ? 'PM' : 'AM';
+            hrs = hrs % 12;
+            hrs = hrs ? hrs : 12;
+            const hrStr = hrs < 10 ? '0' + hrs : hrs;
+            return `${hrStr}:${mins} ${ampm}`;
+        }
+
+        function renderExamsItemList() {
+            const listContainer = document.getElementById('examsList');
+            const countBadge = document.getElementById('examsCountBadge');
+            listContainer.innerHTML = '';
+            countBadge.textContent = `${state.exams.length} Scheduled`;
+
+            if (state.exams.length === 0) {
+                listContainer.innerHTML = `<p class="text-xs text-slate-400 text-center py-12">No exams scheduled yet. Add one to trace preparation targets!</p>`;
+                return;
+            }
+
+            state.exams.forEach(exam => {
+                const days = calculateDaysRemaining(exam.date);
+                let badgeClass = "text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 border-emerald-100 dark:border-emerald-950";
+                if(days <= 5) {
+                    badgeClass = "text-rose-600 bg-rose-50 dark:bg-rose-950/40 border-rose-100 dark:border-rose-950";
+                } else if(days <= 10) {
+                    badgeClass = "text-amber-600 bg-amber-50 dark:bg-amber-950/40 border-amber-100 dark:border-amber-950";
+                }
+
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between p-4 bg-slate-50/60 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/40 rounded-2xl hover:border-slate-200 dark:hover:border-slate-800 transition duration-200";
+                div.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/60 flex flex-col items-center justify-center border border-rose-100 dark:border-rose-800/50 text-rose-500 shrink-0 shadow-inner">
+                            <i data-lucide="award" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-extrabold text-sm text-slate-800 dark:text-slate-100">${exam.subject}</h4>
+                            <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-1 flex items-center gap-1">
+                                <i data-lucide="calendar" class="w-3.5 h-3.5"></i> ${formatDate(exam.date)} @ ${formatClockTime(exam.time)}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-4">
+                        <div class="text-right">
+                            <div class="text-xs font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-1 justify-end">
+                                <i data-lucide="hourglass" class="w-3.5 h-3.5 text-rose-500"></i> ${exam.hours} hrs
+                            </div>
+                            <span class="px-2 py-0.5 rounded-lg border text-[9px] font-bold block mt-1 ${badgeClass}">
+                                ${days <= 0 ? 'Urgent / Passed' : `${days} days left`}
+                            </span>
+                        </div>
+                        <button onclick="removeExamItem(${exam.id})" class="p-2 text-rose-500/80 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-xl transition">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                `;
+                listContainer.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        function addExamItem() {
+            const subjectInput = document.getElementById('examSubjectInput');
+            const dateInput = document.getElementById('examDateInput');
+            const timeInput = document.getElementById('examTimeInput');
+            const hoursInput = document.getElementById('examHoursInput');
+
+            const subject = subjectInput.value.trim();
+            const date = dateInput.value;
+            const time = timeInput.value;
+            const hours = parseInt(hoursInput.value);
+
+            if (!subject || !date || !time || !hours) {
+                alert("Please complete all exam input fields!");
+                return;
+            }
+
+            const exam = {
+                id: Date.now(),
+                subject,
+                date,
+                time,
+                hours
+            };
+
+            state.exams.push(exam);
+            saveState();
+
+            // Clear Form
+            subjectInput.value = '';
+            dateInput.value = '';
+            timeInput.value = '';
+            hoursInput.value = '';
+
+            renderExamsItemList();
+        }
+
+        function removeExamItem(id) {
+            state.exams = state.exams.filter(e => e.id !== id);
+            saveState();
+            renderExamsItemList();
+        }
+
+        // ==========================================
+        // VIEW RENDERING: 4. SMART PLAN
+        // ==========================================
+        function renderSmartPlanView(container) {
+            let innerHtml = `
+                <div class="glass-card rounded-3xl border border-slate-100 dark:border-slate-800 p-6 md:p-8 shadow-sm max-w-3xl mx-auto space-y-6">
+                    <div class="flex items-center gap-4 border-b border-slate-100 dark:border-slate-800 pb-5">
+                        <div class="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 p-3 rounded-2xl shadow-inner">
+                            <i data-lucide="brain" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-extrabold text-slate-800 dark:text-slate-100">Study Engine Solver</h3>
+                            <p class="text-xs text-slate-400 font-medium">Synchronizes target subject hours with remaining pre-exam days.</p>
+                        </div>
+                    </div>
+
+                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                        This schedule evaluates your upcoming exams lists, compares dates against our system reference calendar (<code class="bg-slate-100 dark:bg-slate-900 px-1.5 py-0.5 rounded font-bold">${formatDate(CURRENT_DATE_STR)}</code>), and targets daily study thresholds.
+                    </p>
+
+                    <div class="space-y-4">
+                        <button onclick="triggerPlanGenerationAnimation()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold py-3.5 rounded-2xl shadow-md shadow-emerald-500/15 flex items-center justify-center gap-2 transition select-none">
+                            <i data-lucide="sparkles" class="w-5 h-5"></i> Generate Study Goals
+                        </button>
+                    </div>
+
+                    <!-- Output Schedule Box -->
+                    <div class="bg-gradient-to-br from-emerald-500/5 to-teal-500/5 dark:from-emerald-950/20 dark:to-teal-950/20 border border-emerald-500/10 rounded-2xl p-6 relative" id="smartPlanScheduleBox">
+                        <h4 class="font-extrabold text-emerald-700 dark:text-emerald-400 flex items-center gap-2 mb-3 text-sm">
+                            <i data-lucide="calendar" class="w-4 h-4"></i> YOUR SMART STUDY SCHEDULE
+                        </h4>
+                        
+                        <div class="space-y-5" id="smartPlanList">
+                            <!-- Populated Dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2 text-xs text-emerald-700 dark:text-emerald-400">
+                        <p class="flex items-start gap-2">
+                            <span class="mt-0.5 font-bold">💡</span>
+                            <span><strong>Study Habit:</strong> Review routine slots to ensure you study free blocks daily.</span>
+                        </p>
+                        <p class="flex items-start gap-2">
+                            <span class="mt-0.5 font-bold">💡</span>
+                            <span><strong>Testing Tip:</strong> Use Test Mode daily to practice sample modules and increase score performance.</span>
+                        </p>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = innerHtml;
+            populateSmartPlanSchedule(false);
+        }
+
+        function populateSmartPlanSchedule(animate = false) {
+            const planList = document.getElementById('smartPlanList');
+            planList.innerHTML = '';
+
+            if (state.exams.length === 0) {
+                planList.innerHTML = `
+                    <div class="text-center py-6 text-slate-400 text-xs">
+                        No upcoming exams scheduled. Add exams in the "Exams" panel to generate study loads.
+                    </div>
+                `;
+                return;
+            }
+
+            if(animate) {
+                planList.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-10 space-y-3">
+                        <div class="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+                        <p class="text-xs text-slate-400 font-semibold animate-pulse">Running planning solver engines...</p>
+                    </div>
+                `;
+                setTimeout(() => {
+                    renderPlanItems();
+                }, 800);
+            } else {
+                renderPlanItems();
+            }
+
+            function renderPlanItems() {
+                planList.innerHTML = '';
+                state.exams.forEach((exam, idx) => {
+                    const days = calculateDaysRemaining(exam.date);
+                    
+                    let targetHoursPerDay = 0;
+                    let targetText = "";
+
+                    if (days <= 0) {
+                        targetText = "Exam Day / Completed! 🎉";
+                    } else {
+                        targetHoursPerDay = (parseInt(exam.hours) / days).toFixed(1);
+                        targetText = `~${targetHoursPerDay} hours / day`;
+                    }
+
+                    const div = document.createElement('div');
+                    div.className = "p-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm animate-fade-in";
+                    div.style.animationDelay = `${idx * 0.05}s`;
+                    div.innerHTML = `
+                        <div class="flex flex-wrap items-start justify-between gap-2">
+                            <div>
+                                <h4 class="font-extrabold text-sm text-emerald-700 dark:text-emerald-400">${idx + 1}. ${exam.subject}</h4>
+                                <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">Exam Date: ${formatDate(exam.date)}</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Target Studied</span>
+                                <p class="text-sm font-extrabold text-slate-800 dark:text-slate-200 mt-0.5">${targetText}</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 bg-slate-50 dark:bg-slate-950 p-2.5 rounded-xl text-[10px] text-slate-500 dark:text-slate-400 flex justify-between items-center">
+                            <span>Remaining: <strong>${days <= 0 ? 0 : days} days</strong></span>
+                            <span>Total Volume: <strong>${exam.hours} hrs needed</strong></span>
+                        </div>
+                    `;
+                    planList.appendChild(div);
+                });
+                lucide.createIcons();
+            }
+        }
+
+        function triggerPlanGenerationAnimation() {
+            populateSmartPlanSchedule(true);
+        }
+
+        // ==========================================
+        // VIEW RENDERING: 5. TEST MODE
+        // ==========================================
+        function renderTestModeView(container) {
+            // Check quiz state
+            if (window.quizActive) {
+                renderQuizInterface(container);
+                return;
+            }
+
+            const html = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Create Question Panel -->
+                    <div class="glass-card p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm space-y-4 h-fit">
+                        <div>
+                            <h3 class="font-extrabold text-base text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                <i data-lucide="plus-circle" class="w-5 h-5 text-purple-500"></i> Add MCQ Question
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">Design practice modules to audit preparation scores.</p>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Question Title</label>
+                                <input type="text" id="quizQuestionInput" placeholder="e.g. What is gravity?" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition font-medium text-xs">
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Option A</label>
+                                    <input type="text" id="optAInput" placeholder="Option A" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 outline-none text-xs font-medium focus:ring-2 focus:ring-purple-500/25">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Option B</label>
+                                    <input type="text" id="optBInput" placeholder="Option B" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 outline-none text-xs font-medium focus:ring-2 focus:ring-purple-500/25">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Option C</label>
+                                    <input type="text" id="optCInput" placeholder="Option C" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 outline-none text-xs font-medium focus:ring-2 focus:ring-purple-500/25">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Option D</label>
+                                    <input type="text" id="optDInput" placeholder="Option D" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 outline-none text-xs font-medium focus:ring-2 focus:ring-purple-500/25">
+                                </div>
+                            </div>
+
+                            <div class="flex gap-3 pt-2">
+                                <div class="flex-1">
+                                    <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Correct Option</label>
+                                    <select id="correctOptionSelect" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 outline-none text-xs font-bold text-slate-700 dark:text-slate-300">
+                                        <option value="A">Answer: A</option>
+                                        <option value="B">Answer: B</option>
+                                        <option value="C">Answer: C</option>
+                                        <option value="D">Answer: D</option>
+                                    </select>
+                                </div>
+                                <button onclick="addNewTestQuestion()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 self-end text-xs transition shadow-md shadow-purple-500/10">
+                                    <i data-lucide="plus" class="w-4 h-4"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Quiz Manager & Sample Question Preview -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="glass-card p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm space-y-6">
+                            <div class="flex flex-wrap items-center justify-between gap-4">
+                                <div class="px-4 py-2 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-xl font-bold text-xs">
+                                    Questions bank: <span id="quizTotalQuestionsCount">5</span>
+                                </div>
+                                <button onclick="startQuizTestRun()" class="flex-1 max-w-[200px] bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-extrabold px-5 py-3 rounded-xl shadow-md transition flex items-center justify-center gap-2 text-xs select-none">
+                                    <i data-lucide="rocket" class="w-4 h-4"></i> Start Quiz Test
+                                </button>
+                            </div>
+
+                            <!-- Sample Question Preview Panel -->
+                            <div class="bg-orange-500/5 border border-orange-500/15 p-5 rounded-2xl relative overflow-hidden" id="quizPreviewBox">
+                                <h3 class="text-orange-700 dark:text-orange-400 font-bold text-xs uppercase tracking-wider mb-3">Live Question Preview</h3>
+                                <p class="font-extrabold text-slate-800 dark:text-slate-100 mb-4 text-sm" id="quizPreviewTitle">Q1: What is the capital of France?</p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="quizPreviewOptions">
+                                    <button class="bg-emerald-500/10 border-2 border-emerald-500 text-emerald-800 dark:text-emerald-400 p-2.5 rounded-xl text-xs font-bold text-left px-4">A) Paris</button>
+                                    <button class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-400 p-2.5 rounded-xl text-xs font-medium text-left px-4">B) London</button>
+                                    <button class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-400 p-2.5 rounded-xl text-xs font-medium text-left px-4">C) Rome</button>
+                                    <button class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-400 p-2.5 rounded-xl text-xs font-medium text-left px-4">D) Berlin</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Test Quiz Results Summary Widget -->
+                        <div class="glass-card p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm flex items-center justify-between gap-4">
+                            <div class="flex items-center gap-4">
+                                <div class="text-4xl shadow p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800">🏆</div>
+                                <div>
+                                    <p class="text-purple-600 dark:text-purple-400 font-extrabold text-xs uppercase tracking-wider">Last Test Result</p>
+                                    <p class="text-2xl font-extrabold text-slate-800 dark:text-slate-100 mt-1" id="lastQuizScoreText">Score: 4 / 5</p>
+                                    <p class="text-[10px] text-slate-400 mt-0.5">Stats sync automatically</p>
+                                </div>
+                            </div>
+                            <!-- Circular Progress Indicator -->
+                            <div class="relative w-16 h-16 shrink-0" id="quizProgressCircle">
+                                <!-- Populated Dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
+            updateQuizPanelDetails();
+        }
+
+        function updateQuizPanelDetails() {
+            document.getElementById('quizTotalQuestionsCount').textContent = state.questions.length;
+            
+            // Set Quiz Score
+            const lastScore = state.scores[state.scores.length - 1] || 0;
+            const scoreCount = Math.round((lastScore / 100) * state.questions.length);
+            
+            document.getElementById('lastQuizScoreText').textContent = `Score: ${scoreCount} / ${state.questions.length}`;
+
+            // Draw Circular progress bar
+            const percent = lastScore;
+            const dashArray = `${percent}, 100`;
+            const circle = document.getElementById('quizProgressCircle');
+            circle.innerHTML = `
+                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                    <path class="text-slate-100 dark:text-slate-800" stroke-width="3.5" fill="none" stroke="currentColor" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    <path class="text-emerald-500" stroke-dasharray="${dashArray}" stroke-width="3.5" stroke-linecap="round" fill="none" stroke="currentColor" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center font-extrabold text-xs text-slate-800 dark:text-slate-100">${percent}%</div>
+            `;
+
+            // Preview Question 1 if available
+            if (state.questions.length > 0) {
+                const firstQ = state.questions[0];
+                document.getElementById('quizPreviewTitle').textContent = `Q1: ${firstQ.question}`;
+                const optionsBox = document.getElementById('quizPreviewOptions');
+                optionsBox.innerHTML = '';
+                firstQ.options.forEach((opt, idx) => {
+                    const letters = ["A", "B", "C", "D"];
+                    const isCorrect = letters[idx] === firstQ.answer;
+                    
+                    const btn = document.createElement('button');
+                    if(isCorrect) {
+                        btn.className = "bg-emerald-500/10 border-2 border-emerald-500 text-emerald-800 dark:text-emerald-400 p-2.5 rounded-xl text-xs font-bold text-left px-4";
+                    } else {
+                        btn.className = "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-400 p-2.5 rounded-xl text-xs font-medium text-left px-4";
+                    }
+                    btn.textContent = `${letters[idx]}) ${opt}`;
+                    optionsBox.appendChild(btn);
+                });
+            } else {
+                document.getElementById('quizPreviewTitle').textContent = "No questions found. Add one on the left!";
+                document.getElementById('quizPreviewOptions').innerHTML = '';
+            }
+        }
+
+        function addNewTestQuestion() {
+            const questionTitleInput = document.getElementById('quizQuestionInput');
+            const optA = document.getElementById('optAInput');
+            const optB = document.getElementById('optBInput');
+            const optC = document.getElementById('optCInput');
+            const optD = document.getElementById('optDInput');
+            const correctSelect = document.getElementById('correctOptionSelect');
+
+            const question = questionTitleInput.value.trim();
+            const aVal = optA.value.trim();
+            const bVal = optB.value.trim();
+            const cVal = optC.value.trim();
+            const dVal = optD.value.trim();
+            const answer = correctSelect.value;
+
+            if(!question || !aVal || !bVal || !cVal || !dVal) {
+                alert("Please complete the question and all four options!");
+                return;
+            }
+
+            const item = {
+                id: Date.now(),
+                question,
+                options: [aVal, bVal, cVal, dVal],
+                answer
+            };
+
+            state.questions.push(item);
+            saveState();
+
+            // Clear inputs
+            questionTitleInput.value = '';
+            optA.value = '';
+            optB.value = '';
+            optC.value = '';
+            optD.value = '';
+
+            updateQuizPanelDetails();
+        }
+
+        // Start testing runner
+        function startQuizTestRun() {
+            if (state.questions.length === 0) {
+                alert("Create questions before starting a quiz session!");
+                return;
+            }
+            window.quizActive = true;
+            window.quizIndex = 0;
+            window.quizCorrectCount = 0;
+            window.selectedAnswer = null; // tracking user selection status
+            window.quizAnswersState = []; // tracks correct/incorrect statuses
+
+            const container = document.getElementById('viewContainer');
+            renderQuizInterface(container);
+        }
+
+        function renderQuizInterface(container) {
+            const currentQ = state.questions[window.quizIndex];
+            const letters = ["A", "B", "C", "D"];
+
+            const html = `
+                <div class="glass-card rounded-3xl border border-slate-100 dark:border-slate-800 p-6 md:p-8 shadow-sm max-w-2xl mx-auto space-y-6 relative overflow-hidden">
+                    <!-- Progress meter -->
+                    <div class="flex justify-between items-center text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">
+                        <span>Question ${window.quizIndex + 1} of ${state.questions.length}</span>
+                        <span>Points: ${window.quizCorrectCount} / ${state.questions.length}</span>
+                    </div>
+
+                    <!-- Progress bar -->
+                    <div class="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div class="bg-gradient-to-r from-purple-500 to-indigo-500 h-full transition-all duration-300" style="width: ${((window.quizIndex) / state.questions.length) * 100}%"></div>
+                    </div>
+
+                    <div class="py-4">
+                        <h3 class="text-lg font-extrabold text-slate-800 dark:text-slate-100">${window.quizIndex + 1}. ${currentQ.question}</h3>
+                    </div>
+
+                    <!-- Options Grid -->
+                    <div class="grid grid-cols-1 gap-3.5" id="quizOptionsGrid">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                    <!-- Action buttons -->
+                    <div class="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <button onclick="abortQuizSession()" class="px-5 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold transition">
+                            Quit Quiz
+                        </button>
+                        <button id="nextQuizBtn" disabled onclick="nextQuizStep()" class="px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold shadow-md shadow-purple-500/10 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center gap-1.5">
+                            Next Question <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
+            lucide.createIcons();
+
+            // Render option items
+            const grid = document.getElementById('quizOptionsGrid');
+            currentQ.options.forEach((opt, idx) => {
+                const optLetter = letters[idx];
+                const btn = document.createElement('button');
+                btn.className = "quiz-opt-btn flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-slate-800 dark:text-slate-200 font-semibold hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-100/40 transition duration-150 text-left text-sm group";
+                btn.innerHTML = `
+                    <span>${optLetter}) ${opt}</span>
+                    <span class="w-6 h-6 border-2 border-slate-300 dark:border-slate-700 rounded-full flex items-center justify-center text-[10px] font-bold group-hover:border-purple-500 shrink-0"></span>
+                `;
+                btn.addEventListener('click', () => handleQuizOptionSelection(btn, optLetter, currentQ.answer));
+                grid.appendChild(btn);
+            });
+        }
+
+        function handleQuizOptionSelection(btnElement, selectedOpt, correctOpt) {
+            if (window.selectedAnswer !== null) return; // Prevent double selecting
+            window.selectedAnswer = selectedOpt;
+
+            const buttons = document.querySelectorAll('.quiz-opt-btn');
+            const letters = ["A", "B", "C", "D"];
+
+            buttons.forEach(btn => {
+                btn.disabled = true; // disable all options
+                // remove hover styles
+                btn.className = btn.className.replace('hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-100/40', '');
+            });
+
+            const nextBtn = document.getElementById('nextQuizBtn');
+            nextBtn.disabled = false;
+
+            const isCorrect = selectedOpt === correctOpt;
+            if (isCorrect) {
+                window.quizCorrectCount++;
+                btnElement.classList.add('bg-emerald-500/15', 'border-emerald-500', 'text-emerald-700', 'dark:text-emerald-400');
+                btnElement.querySelector('span:last-child').className = "w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center shrink-0 border border-emerald-500";
+                btnElement.querySelector('span:last-child').innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5"></i>`;
+            } else {
+                btnElement.classList.add('bg-rose-500/15', 'border-rose-500', 'text-rose-700', 'dark:text-rose-400');
+                btnElement.querySelector('span:last-child').className = "w-6 h-6 bg-rose-500 text-white rounded-full flex items-center justify-center shrink-0 border border-rose-500";
+                btnElement.querySelector('span:last-child').innerHTML = `<i data-lucide="x" class="w-3.5 h-3.5"></i>`;
+
+                // Highlight correct button
+                buttons.forEach(btn => {
+                    const letter = btn.querySelector('span:first-child').textContent.charAt(0);
+                    if (letter === correctOpt) {
+                        btn.classList.add('bg-emerald-500/10', 'border-emerald-500/50', 'text-emerald-700', 'dark:text-emerald-400');
+                    }
+                });
+            }
+            lucide.createIcons();
+        }
+
+        function nextQuizStep() {
+            window.quizIndex++;
+            window.selectedAnswer = null;
+
+            if (window.quizIndex >= state.questions.length) {
+                finishQuizSession();
+            } else {
+                const container = document.getElementById('viewContainer');
+                renderQuizInterface(container);
+            }
+        }
+
+        function abortQuizSession() {
+            window.quizActive = false;
+            switchView('test-mode');
+        }
+
+        function finishQuizSession() {
+            window.quizActive = false;
+            
+            // Calculate final percentage score
+            const scorePercentage = Math.round((window.quizCorrectCount / state.questions.length) * 100);
+            
+            // Update stats databases
+            state.testsTaken++;
+            state.scores.push(scorePercentage);
+            saveState();
+
+            // Render congrats splash screen
+            const container = document.getElementById('viewContainer');
+            const dashArray = `${scorePercentage}, 100`;
+
+            const resultsHtml = `
+                <div class="glass-card rounded-3xl border border-slate-100 dark:border-slate-800 p-8 shadow-sm max-w-md mx-auto text-center space-y-6 animate-fade-in">
+                    <div class="w-16 h-16 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-full flex items-center justify-center mx-auto text-3xl">
+                        🏆
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-extrabold text-slate-800 dark:text-slate-100">Test Completed!</h3>
+                        <p class="text-xs text-slate-400 mt-1">Practice builds excellence</p>
+                    </div>
+
+                    <div class="py-4 flex flex-col items-center">
+                        <!-- Circular progress -->
+                        <div class="relative w-32 h-32 mb-4">
+                            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                                <path class="text-slate-100 dark:text-slate-800" stroke-width="3" fill="none" stroke="currentColor" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                <path class="text-purple-600 dark:text-purple-400" stroke-dasharray="${dashArray}" stroke-width="3" stroke-linecap="round" fill="none" stroke="currentColor" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                            </svg>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                <span class="text-3xl font-extrabold text-slate-800 dark:text-slate-100">${scorePercentage}%</span>
+                                <span class="text-[9px] uppercase tracking-wider text-slate-400 font-bold mt-0.5">accuracy</span>
+                            </div>
+                        </div>
+
+                        <p class="text-sm font-extrabold text-slate-800 dark:text-slate-200">
+                            You answered ${window.quizCorrectCount} out of ${state.questions.length} correctly!
+                        </p>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button onclick="switchView('dashboard')" class="flex-1 py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-xl text-xs hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                            Back to Home
+                        </button>
+                        <button onclick="startQuizTestRun()" class="flex-1 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold rounded-xl text-xs shadow-md shadow-purple-500/15 transition select-none">
+                            Retry Quiz
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = resultsHtml;
+        }
+
+        // ==========================================
+        // VIEW RENDERING: 6. ANALYTICS & STATS VIEW
+        // ==========================================
+        function renderAnalyticsView(container) {
+            let avgScore = 0;
+            if(state.scores.length > 0) {
+                avgScore = Math.round(state.scores.reduce((a,b)=>a+b, 0) / state.scores.length);
+            } else {
+                avgScore = 78;
+            }
+
+            const html = `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Chart 1: Study hours per subject -->
+                    <div class="glass-card p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-extrabold text-base text-slate-800 dark:text-slate-100 flex items-center gap-2 mb-1">
+                                <i data-lucide="bar-chart-3" class="w-5 h-5 text-brand-500"></i> Subject Hour Distribution
+                            </h3>
+                            <p class="text-xs text-slate-400">Total planned study volume per curriculum unit.</p>
+                            
+                            <div class="mt-8 space-y-4" id="analyticsSubjectChart">
+                                <!-- Bars populated dynamically -->
+                            </div>
+                        </div>
+                        <div class="text-[10px] text-slate-400 mt-4 border-t border-slate-100 dark:border-slate-800 pt-3">
+                            Subject allocations are driven by deadlines and requirements configured in Exams tracker.
+                        </div>
+                    </div>
+
+                    <!-- Chart 2: Recent Quiz Score Performance -->
+                    <div class="glass-card p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-extrabold text-base text-slate-800 dark:text-slate-100 flex items-center gap-2 mb-1">
+                                <i data-lucide="trending-up" class="w-5 h-5 text-purple-500"></i> Score Progress History
+                            </h3>
+                            <p class="text-xs text-slate-400">Traces accuracies across recent assessment runs.</p>
+
+                            <div class="mt-8 h-48 flex items-end justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-2 relative" id="analyticsScoresChart">
+                                <!-- Dynamic vertical bars -->
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center text-[10px] text-slate-400 mt-4 border-t border-slate-100 dark:border-slate-800 pt-3">
+                            <span>Total Runs: <strong>${state.testsTaken} tests</strong></span>
+                            <span>Average accuracy: <strong class="text-purple-600 dark:text-purple-400">${avgScore}%</strong></span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
+
+            // Render Subject hours allocation chart
+            const subjContainer = document.getElementById('analyticsSubjectChart');
+            if (state.exams.length === 0) {
+                subjContainer.innerHTML = `<p class="text-xs text-slate-400 text-center py-12">No exams found. Add subject schedules to audit metrics.</p>`;
+            } else {
+                const maxHrs = Math.max(...state.exams.map(e => parseInt(e.hours || 1)), 1);
+                state.exams.forEach(exam => {
+                    const percentage = Math.round((parseInt(exam.hours) / maxHrs) * 100);
+                    const div = document.createElement('div');
+                    div.className = "space-y-1.5";
+                    div.innerHTML = `
+                        <div class="flex justify-between text-xs font-bold text-slate-600 dark:text-slate-300">
+                            <span>${exam.subject}</span>
+                            <span>${exam.hours} hours</span>
+                        </div>
+                        <div class="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-brand-500 to-indigo-600 h-full rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+                        </div>
+                    `;
+                    subjContainer.appendChild(div);
+                });
+            }
+
+            // Render Quiz accuracy history charts (vertical bars)
+            const scoresContainer = document.getElementById('analyticsScoresChart');
+            if (state.scores.length === 0) {
+                scoresContainer.innerHTML = `<p class="text-xs text-slate-400 text-center py-12 w-full">No assessment scores stored yet. Take a quiz in Test Mode!</p>`;
+            } else {
+                const limitScores = state.scores.slice(-5); // show last 5 scores
+                limitScores.forEach((score, idx) => {
+                    const barBox = document.createElement('div');
+                    barBox.className = "flex-1 flex flex-col items-center gap-1.5 h-full justify-end";
+                    barBox.innerHTML = `
+                        <span class="text-[9px] font-bold text-purple-600 dark:text-purple-400">${score}%</span>
+                        <div class="w-full bg-gradient-to-t from-purple-500 to-indigo-500 rounded-t-xl transition-all duration-700" style="height: ${score}%"></div>
+                        <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Run ${state.scores.length - limitScores.length + idx + 1}</span>
+                    `;
+                    scoresContainer.appendChild(barBox);
+                });
+            }
+            lucide.createIcons();
+        }
+
+        // ==========================================
+        // VIEW RENDERING: 7. CALENDAR VIEW
+        // ==========================================
+        function renderCalendarView(container) {
+            const html = `
+                <div class="glass-card p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm max-w-2xl mx-auto space-y-6">
+                    <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-4">
+                        <h3 class="font-extrabold text-base text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                            <i data-lucide="calendar" class="w-5 h-5 text-brand-500"></i> Assessment & Deadlines Tracker
+                        </h3>
+                        <span class="text-xs font-bold text-slate-500 bg-slate-100 dark:bg-slate-900 px-3 py-1 rounded-full uppercase tracking-wider">June 2026</span>
+                    </div>
+
+                    <!-- Calendar Grid Grid -->
+                    <div class="grid grid-cols-7 gap-2.5 text-center text-xs font-bold text-slate-400 uppercase tracking-wider">
+                        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                    </div>
+
+                    <div class="grid grid-cols-7 gap-2" id="calendarDaysGrid">
+                        <!-- Render calendar grid cells -->
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2">
+                        <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider mb-2">Exams Scheduled This Period:</h4>
+                        <div class="space-y-2" id="calendarExamsLegend">
+                            <!-- Populated Dynamically -->
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
+            populateCalendarGrid();
+        }
+
+        function populateCalendarGrid() {
+            const grid = document.getElementById('calendarDaysGrid');
+            grid.innerHTML = '';
+
+            // June 2026 starts on a Monday (1)
+            // Total days in June = 30
+            const totalDays = 30;
+            const startDayOffset = 1; // 1 means Monday
+
+            // Render empty cells for offset
+            for(let i=0; i < startDayOffset; i++) {
+                const cell = document.createElement('div');
+                cell.className = "h-14 bg-slate-50/20 dark:bg-slate-950/20 rounded-xl border border-transparent";
+                grid.appendChild(cell);
+            }
+
+            // Render days 1 to 30
+            for(let day = 1; day <= totalDays; day++) {
+                const dayStr = `2026-06-${day < 10 ? '0' + day : day}`;
+                const examsOnDay = state.exams.filter(e => e.date === dayStr);
+
+                const cell = document.createElement('div');
+                
+                let cellClass = "h-14 bg-slate-50/50 dark:bg-slate-900/20 border border-slate-100 dark:border-slate-900 rounded-xl flex flex-col items-center justify-between p-1.5 hover:border-brand-500/40 cursor-pointer relative group transition";
+                
+                // Highlight anchor date (June 16, 2026)
+                if (day === 16) {
+                    cellClass += " ring-2 ring-brand-500/80 bg-brand-500/5";
+                }
+
+                let examDots = "";
+                if(examsOnDay.length > 0) {
+                    cellClass += " border-rose-500/40 bg-rose-500/[0.03]";
+                    examDots = `<span class="w-1.5 h-1.5 bg-rose-500 rounded-full animate-pulse"></span>`;
+                }
+
+                cell.className = cellClass;
+                cell.innerHTML = `
+                    <span class="text-xs font-extrabold ${day === 16 ? 'text-brand-600 dark:text-brand-400' : 'text-slate-600 dark:text-slate-400'}">${day}</span>
+                    <div class="flex gap-1 justify-center items-center h-3">
+                        ${examDots}
+                    </div>
+                `;
+                
+                // Add popover tooltip details on click
+                if(examsOnDay.length > 0) {
+                    cell.addEventListener('click', () => {
+                        alert(`Exam Scheduled: ${examsOnDay.map(e => `${e.subject} at ${formatClockTime(e.time)}`).join(', ')}`);
+                    });
+                }
+
+                grid.appendChild(cell);
+            }
+
+            // Populate Legend list
+            const legend = document.getElementById('calendarExamsLegend');
+            const juneExams = state.exams.filter(e => e.date.startsWith('2026-06'));
+            
+            if(juneExams.length === 0) {
+                legend.innerHTML = `<p class="text-xs text-slate-400">No June exams scheduled.</p>`;
+            } else {
+                juneExams.forEach(exam => {
+                    const days = calculateDaysRemaining(exam.date);
+                    const div = document.createElement('div');
+                    div.className = "flex justify-between items-center text-xs p-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl";
+                    div.innerHTML = `
+                        <span class="font-bold text-slate-700 dark:text-slate-300">${exam.subject}</span>
+                        <span class="text-[10px] text-rose-500 font-extrabold uppercase bg-rose-500/10 px-2 py-0.5 rounded-lg">
+                            ${formatDate(exam.date)} (${days <= 0 ? 'Urgent' : `${days} days`})
+                        </span>
+                    `;
+                    legend.appendChild(div);
+                });
+            }
+            lucide.createIcons();
+        }
+
+        // ==========================================
+        // VIEW RENDERING: 8. SETTINGS CONFIG
+        // ==========================================
+        function renderSettingsView(container) {
+            const html = `
+                <div class="glass-card p-6 md:p-8 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm max-w-xl mx-auto space-y-6">
+                    <div>
+                        <h3 class="font-extrabold text-base text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                            <i data-lucide="settings" class="w-5 h-5 text-brand-500"></i> Settings & Configurations
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-1">Configure user parameters, study streak widget, or restore default states.</p>
+                    </div>
+
+                    <div class="space-y-4 pt-2">
+                        <!-- Profile name edit -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Student Profile Name</label>
+                            <input type="text" id="settingsNameInput" value="${state.profileName}" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition font-medium text-sm">
+                        </div>
+
+                        <!-- Streak widget adjustments -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Streak Day Tracker</label>
+                            <div class="flex items-center gap-3">
+                                <input type="number" id="settingsStreakInput" value="${state.streak}" min="0" class="w-24 px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition font-bold text-sm">
+                                <span class="text-xs text-slate-400">days in a row</span>
+                            </div>
+                        </div>
+
+                        <!-- Reset / Initialize Options -->
+                        <div class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-3">
+                            <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Account Diagnostics</label>
+                            
+                            <div class="flex flex-wrap gap-3">
+                                <button onclick="saveSettingsConfig()" class="bg-brand-600 hover:bg-brand-700 text-white font-bold px-6 py-2.5 rounded-xl text-xs transition shadow shadow-brand-500/10">
+                                    Save Profile Settings
+                                </button>
+                                <button onclick="resetSettingsConfig()" class="border border-rose-500/20 dark:border-rose-800/40 bg-rose-500/5 hover:bg-rose-500/10 text-rose-500 font-bold px-4 py-2.5 rounded-xl text-xs transition">
+                                    Reset App Database
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function saveSettingsConfig() {
+            const newName = document.getElementById('settingsNameInput').value.trim();
+            const newStreak = parseInt(document.getElementById('settingsStreakInput').value) || 0;
+
+            if(!newName) {
+                alert("Profile name cannot be blank!");
+                return;
+            }
+
+            state.profileName = newName;
+            state.streak = newStreak;
+            saveState();
+            alert("Settings saved successfully!");
+            switchView('dashboard');
+        }
+
+        function resetSettingsConfig() {
+            if(confirm("Are you sure you want to reset all data back to original defaults? Your customized routines, exams, and quizzes will be deleted.")) {
+                localStorage.removeItem(STATEDB_KEY);
+                state = initialDefaultState;
+                saveState();
+                updateThemeUI();
+                alert("App database successfully reset.");
+                switchView('dashboard');
+            }
+        }
+
+        // ==========================================
+        // INITIALIZATION ROUTER
+        // ==========================================
+        
+        // Listen to mobile menu drawer triggers
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sidebar.classList.toggle('-translate-x-full');
+        });
+
+        // Close mobile drawer when clicking content area
+        document.addEventListener('click', (e) => {
+            if (!sidebar.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                sidebar.classList.add('-translate-x-full');
+            }
+        });
+
+        // Toggle notification dropdown on click/touch
+        const notificationBtn = document.getElementById('notificationBtn');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+
+        notificationBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            notificationDropdown.classList.toggle('hidden');
+        });
+
+        // Close notification dropdown when clicking/touching outside
+        document.addEventListener('click', (e) => {
+            if (!notificationDropdown.contains(e.target) && !notificationBtn.contains(e.target)) {
+                notificationDropdown.classList.add('hidden');
+            }
+        });
+
+        // Init loads
+        renderNavigation();
+        updateThemeUI();
+        updateProfileAndStreak();
+        
+        // Load active pane based on state or hash
+        const initialHash = window.location.hash.replace('#', '');
+        if (initialHash && navigationItems.some(n => n.id === initialHash)) {
+            switchView(initialHash);
+        } else {
+            switchView(state.activeView);
+        }
+
+        // Trigger dynamic state load from backend
+        loadStateFromBackend();
+    </script>
+</body>
+</html>
